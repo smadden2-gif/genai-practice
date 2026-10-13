@@ -17,13 +17,46 @@ The prototype does not call an AI model. Its response is a fixed browser-side te
 
 ## Quick tests
 
-These cases were run against the redesigned live Pages prototype at https://smadden2-gif.github.io/genai-practice/:
+These three cases were run against the live prototype after the UI redesign.
 
-| Test | Input or action | Expected behavior | Result |
-| --- | --- | --- | --- |
-| Typical | Work: "I could lead a launch while keeping weekly family commitments." Approved context: "I have a standing appointment on Thursday evenings." Check approval; private note: "Family health details I will not share here." | Result included the work question and approved context; Used showed the Thursday commitment. Kept out said the private note was excluded without revealing its text. | Pass |
-| Challenge | Work: "Should I accept a role with frequent travel?" Personal context: "I may need to care for my parent." Leave approval unchecked; private note: "Do not use this." | No personal context was approved; the template used the work question, Used said no personal context was used, and Kept out described the private note without exposing it. | Pass |
-| Invalid or empty | Reload the page to start with a hidden result, leave required work input empty, and submit. | Browser required-field validation displayed "Please fill out this field." Result stayed hidden. | Pass |
+### Typical: approved context
+
+**Input.** Work: "I could lead a launch while keeping weekly family commitments."
+Approved context: "I have a standing appointment on Thursday evenings."
+Private note: "Family health details I will not share here."
+Approval was checked.
+
+**Expected.** The work question and approved context appear in the response.
+Used lists the approved context. Kept out excludes the private note
+without revealing its text.
+
+**Actual. Pass.** The response included the work question and approved
+context. Used showed the Thursday commitment. Kept out said the note
+stayed out without showing its text.
+
+### Challenge: approval left unchecked
+
+**Input.** Work: "Should I accept a role with frequent travel?"
+Personal context: "I may need to care for my parent."
+Private note: "Do not use this." Approval was left unchecked.
+
+**Expected.** No personal context is used. Used says none was used.
+The private note stays out.
+
+**Actual. Pass.** The no-context response included the work question.
+Used said no personal context was used. Kept out described the private
+note without exposing it.
+
+### Empty work question
+
+**Input.** Reload the page to start fresh, leave required work input
+empty, and submit.
+
+**Expected.** Browser validation blocks submission and the result stays
+hidden.
+
+**Actual. Pass.** The browser displayed "Please fill out this field."
+The result remained hidden.
 
 ## Known limitations
 
@@ -33,7 +66,7 @@ These cases were run against the redesigned live Pages prototype at https://smad
 
 ## Run locally
 
-Clone the repository and open `index.html` in a browser. No build step or server is required. Lexend loads from Google Fonts when online.
+Clone the repository and open `index.html` in a browser. No build step or server is required. The page uses a system font stack and no external JavaScript.
 
 ```bash
 git clone https://github.com/smadden2-gif/genai-practice.git
