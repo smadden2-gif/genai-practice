@@ -83,8 +83,8 @@
       const consent = document.getElementById('approve-context').checked;
       const allowed = consent ? approved : '';
       const recommendation = allowed
-        ? 'A possible next step is to map this work decision against the context you approved, then choose one small action that keeps your existing commitments covered. Context considered: ' + allowed
-        : 'A possible next step is to break this work decision into one reversible action and a list of commitments to check. No personal context was approved, so this result does not use any.';
+        ? 'For this work decision: ' + work + ' A possible next step is to map it against the context you approved, then choose one small action that keeps your existing commitments covered. Context considered: ' + allowed
+        : 'For this work decision: ' + work + ' A possible next step is to break it into one reversible action and a list of commitments to check. No personal context was approved, so this result does not use any.';
       const safeText = (id, value, fallback) => { document.getElementById(id).textContent = value || fallback; };
       safeText('bridge-recommendation', recommendation, 'Add a work decision to see a result.');
       safeText('bridge-used', allowed, 'No personal context used.');
