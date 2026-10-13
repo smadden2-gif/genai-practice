@@ -17,13 +17,13 @@ The prototype does not call an AI model. Its response is a fixed browser-side te
 
 ## Quick tests
 
-These cases were run against the live Pages prototype after the Context Bridge redesign:
+These cases were run against the redesigned live Pages prototype at https://smadden2-gif.github.io/genai-practice/:
 
 | Test | Input or action | Expected behavior | Result |
 | --- | --- | --- | --- |
-| Typical | Enter a work question, personal context, check approval, and add a separate private note. | Response includes the work question and approved context; Used lists the approved context; Kept out says the private note stayed out without revealing its text. | Pending live retest |
-| Challenge | Enter a difficult work question and personal context; leave approval unchecked; add a private note. | Response uses the no-context template; Used says no personal context used; the private note stays out. | Pending live retest |
-| Invalid or empty | Reload to reset the result, leave required work input empty, and submit. | Browser required-field validation blocks submission; no result is revealed. | Pending live retest |
+| Typical | Work: "I could lead a launch while keeping weekly family commitments." Approved context: "I have a standing appointment on Thursday evenings." Check approval; private note: "Family health details I will not share here." | Result included the work question and approved context; Used showed the Thursday commitment. Kept out said the private note was excluded without revealing its text. | Pass |
+| Challenge | Work: "Should I accept a role with frequent travel?" Personal context: "I may need to care for my parent." Leave approval unchecked; private note: "Do not use this." | No personal context was approved; the template used the work question, Used said no personal context was used, and Kept out described the private note without exposing it. | Pass |
+| Invalid or empty | Reload the page to start with a hidden result, leave required work input empty, and submit. | Browser required-field validation displayed "Please fill out this field." Result stayed hidden. | Pass |
 
 ## Known limitations
 
