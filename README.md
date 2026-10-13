@@ -23,13 +23,13 @@ The browser flow works: it accepts text, checks explicit permission for one fiel
 
 ## Quick tests
 
-These are the three cases for live verification. Results are marked pending until the published Pages page is tested.
+I ran these three cases on the live GitHub Pages site:
 
 | Test | Input or action | What happened | Result |
 | --- | --- | --- | --- |
-| Typical | Work: "I could take a three-month role in Singapore." Approved context: "I can travel after my sibling finishes school in June." Check the approval box; private: "Family medical details." | Pending live test. Expected: fixed next-step template uses only the approved text; private text appears only under kept out. | Pending |
-| Challenge | Work: "Maybe I should quit tomorrow?" Add personal context but leave approval unchecked; add "Do not use this" as private context. | Pending live test. Expected: generic reversible-step template; personal and private text are not used in the recommendation. | Pending |
-| Invalid or empty | Leave work decision blank and submit. | Pending live test. Expected: browser requires the work decision and does not show a result. | Pending |
+| Typical | Work: "I could take a three-month role in Singapore." Approved context: "I can travel after my sibling finishes school in June." Check the approval box; private note: "Family medical details." | It showed a fixed next-step response using the approved travel timing. The Used panel showed that timing; Kept out said a separate private note was left out. The note itself did not appear in the result. | Pass |
+| Challenge | Work: "Maybe I should quit tomorrow?" Personal context: "I may need to care for my parent." Leave approval unchecked; private note: "Do not use this." | It showed the reversible-step template, said no personal context was approved, showed "No personal context used," and kept the private note out. | Pass |
+| Invalid or empty | Reload the live page so the result starts hidden, leave the required work-decision box empty, and submit. | The browser's required-field check blocked submission; the result stayed hidden. | Pass |
 
 ## Known limitations
 
