@@ -1,50 +1,42 @@
-# GenAI Practice
+# Context Bridge
 
-A small AI product experiment repo. Its first project is **Continuity**, an idea for helping people act on work opportunities while keeping the commitments and personal context they choose to protect.
+**Context Bridge helps AI use the work and personal context you approve, across the tools where your life is split.**
 
-## Continuity
+Your AI starts from zero in each tool, while the context it needs is scattered across work and personal systems. Context Bridge is a permission-first way to carry the right context to a task while keeping the boundary visible.
 
-**Lower the cost of saying yes.**
-
-This page explores a product that could help people take opportunities without letting the rest of life unravel. The first working slice is a small context bridge: enter a work decision, choose whether personal context may be considered, and see a suggested next step with a clear record of what was used and what stayed out.
-
-- [Open the GitHub Pages prototype](https://smadden2-gif.github.io/genai-practice/)
+- [Open the live Context Bridge prototype](https://smadden2-gif.github.io/genai-practice/)
 - [View the public GitHub repository](https://github.com/smadden2-gif/genai-practice)
 
-## Try it
+## The first slice
 
-Open the prototype, scroll to **Try the first slice**, enter a work decision, and optionally add personal context. Check the approval box only if you want that text used in the result. Text in the private field is never used. The result shows which personal context crossed the bridge and which did not.
+The page centers on one simulated flow: enter a work question, add optional personal context, explicitly approve whether that context may be considered, and optionally write a separate note to keep private. The result shows what personal context was used and what stayed out. Approval is unchecked by default.
 
-## AI role and what works
+## AI role and transparency
 
-The future AI would help connect a work opportunity with relevant personal context, but only context the person has approved for that decision. It could suggest a next step while keeping unrelated or unapproved context out.
-
-The browser flow works: it accepts text, checks explicit permission for one field, and displays a result and a used/not-used record. The recommendation is a fixed, hard-coded template, not an AI response. There is no model call, backend, API key, data storage, or network transfer of entered text. The original landing page's email form still does not save or send addresses, and its chart is illustrative rather than measured data.
+The prototype does not call an AI model. Its response is a fixed browser-side template that includes the work question and, only if the approval box is checked, the personal context. The separate private-note field is never rendered into the result. There is no backend, API key, storage, or network transfer of entered text. This tests the permission and audit interaction, not the quality of an AI-generated answer or a real cross-tool integration.
 
 ## Quick tests
 
-I ran these three cases on the live GitHub Pages site:
+These cases were run against the live Pages prototype after the Context Bridge redesign:
 
-| Test | Input or action | What happened | Result |
+| Test | Input or action | Expected behavior | Result |
 | --- | --- | --- | --- |
-| Typical | Work: "I could take a three-month role in Singapore." Approved context: "I can travel after my sibling finishes school in June." Check the approval box; private note: "Family medical details." | It showed a fixed next-step response using the approved travel timing. The Used panel showed that timing; Kept out said a separate private note was left out. The note itself did not appear in the result. | Pass |
-| Challenge | Work: "Maybe I should quit tomorrow?" Personal context: "I may need to care for my parent." Leave approval unchecked; private note: "Do not use this." | It showed the reversible-step template, said no personal context was approved, showed "No personal context used," and kept the private note out. | Pass |
-| Invalid or empty | Reload the live page so the result starts hidden, leave the required work-decision box empty, and submit. | The browser's required-field check blocked submission; the result stayed hidden. | Pass |
+| Typical | Enter a work question, personal context, check approval, and add a separate private note. | Response includes the work question and approved context; Used lists the approved context; Kept out says the private note stayed out without revealing its text. | Pending live retest |
+| Challenge | Enter a difficult work question and personal context; leave approval unchecked; add a private note. | Response uses the no-context template; Used says no personal context used; the private note stays out. | Pending live retest |
+| Invalid or empty | Reload to reset the result, leave required work input empty, and submit. | Browser required-field validation blocks submission; no result is revealed. | Pending live retest |
 
 ## Known limitations
 
-- The bridge response is a fixed template, so it does not understand the work decision or reason over context. Next: test the flow with people, then consider a model that receives only explicitly approved context.
-- The demo does not save decisions or remember boundaries between visits. Next: only add storage after deciding how to give users clear control and deletion.
-- This is a single-page prototype; it does not coordinate calendars, commitments, or actions in other services. Next: learn which one action would be most useful before adding integrations.
+- The response is a fixed template. It does not understand the work question or reason over context. Next: test with people, then evaluate a model using synthetic examples and a clear boundary for approved input.
+- The demo does not save decisions or remember permission between visits. Next: define user controls and deletion before considering storage.
+- It does not connect to other tools or move context between them. Next: test the permission model before adding an integration, and show exactly what data an integration would send.
 
 ## Run locally
 
-Download or clone this repository and open `index.html` in a browser. No build step or server is required. Lexend loads from Google Fonts when online.
+Clone the repository and open `index.html` in a browser. No build step or server is required. Lexend loads from Google Fonts when online.
 
 ```bash
 git clone https://github.com/smadden2-gif/genai-practice.git
 cd genai-practice
 open index.html
 ```
-
-The GitHub Pages link is for this prototype copy. The earlier live concept site at `https://continuity.simonmaddenbcc.chatgpt.site` is separate and is not updated by changes in this repository.
