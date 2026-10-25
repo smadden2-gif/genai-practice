@@ -1,0 +1,74 @@
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+(async () => {
+  const browser = await chromium.launch({executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', args:['--no-sandbox']});
+  try {
+    const page = await browser.newPage();
+    const errors = [], googleRequests = [];
+    page.on('pageerror', e => errors.push(e.message));
+    page.on('request', r => { if (/accounts\.google\.com|oauth2\.googleapis\.com|www\.googleapis\.com\/calendar|accounts\.google\.com\/gsi/i.test(r.url())) googleRequests.push(r.url()); });
+    await page.goto('http://127.0.0.1:8000');
+    assert.equal(await page.locator('#calendar-submit').isDisabled(), true);
+    assert.equal(await page.locator('#calendar-approval').isChecked(), false);
+    await page.evaluate(() => runCalendarQuery());
+    assert.equal(await page.locator('#calendar-status').innerText(), 'Could not check this calendar. No availability conclusion was made.');
+    assert.deepEqual(googleRequests, []);
+    const results = await page.evaluate(async () => {
+      const check = (value, message) => { if (!value) throw new Error(message); };
+      const rejects = async fn => { let threw=false;try { await fn(); } catch {threw=true;}check(threw, 'Expected closed failure'); };
+      await rejects(() => resolveCalendarTimeZone(null));
+      await rejects(() => resolveCalendarTimeZone({primary:true,timeZone:'not-a-zone'}));
+      const q = calculateAvailabilityWindow(new Date('2026-03-08T12:00:00Z'), 'America/New_York');
+      check(q.timeMin === '2026-03-08T19:00:00.000Z' && q.timeMax === '2026-03-09T04:00:00.000Z', 'Spring DST');
+      const fall = calculateAvailabilityWindow(new Date('2026-11-01T12:00:00Z'), 'America/New_York');
+      check(fall.timeMin === '2026-11-01T20:00:00.000Z' && fall.timeMax === '2026-11-02T05:00:00.000Z', 'Fall DST');
+      const rollover = calculateAvailabilityWindow(new Date('2026-12-31T12:00:00Z'), 'Pacific/Kiritimati');
+      check(rollover.date === '2027-01-01', 'Calendar-local date');
+      check(!canRunCalendarQuery({available:true, approved:false, query:q}), 'Unchecked gate');
+      check(!canRunCalendarQuery({available:true, approved:true, query:q, approvedAt:'now', approvedWindow:JSON.stringify(q)}), 'Stale approval');
+      const data = busy => ({timeMin:q.timeMin,timeMax:q.timeMax,calendars:{primary:{busy}}});
+      check(calculateAvailabilityOutcome(validateFreeBusyResponse(data([]),q),q) === 'No busy blocks found in this window', 'Empty outcome');
+      const interval = {start:'2026-03-08T20:00:00Z',end:'2026-03-08T21:00:00Z'};
+      check(calculateAvailabilityOutcome(validateFreeBusyResponse(data([interval]),q),q).startsWith('Busy intervals:'), 'Busy outcome');
+      for (const bad of [{}, {...data([]),calendars:{primary:{errors:[{reason:'notFound'}],busy:[]}}},data([{start:'invalid',end:'invalid'}]),data([{start:interval.end,end:interval.start}]),data(null)]) await rejects(() => validateFreeBusyResponse(bad,q));
+      const auth = {accessToken:'test-only', scopes:[calendarScope], expiresAt:Date.now()+60000};
+      let calls=0, body;
+      const fakeFetch=async (url, options) => {calls++;body=JSON.parse(options.body);return {ok:true,json:async()=>data([])};};
+      await requestFreeBusyOnce({...q,work:'must not cross',private:'must not cross'},auth,fakeFetch);
+      check(calls===1 && JSON.stringify(body)===JSON.stringify(buildFreeBusyRequest(q)), 'Exactly one narrow request');
+      for (const status of [401,403,429,500]) await rejects(() => requestFreeBusyOnce(q,auth,async()=>({ok:false,status})));
+      await rejects(() => requestFreeBusyOnce(q,auth,async()=>{throw new Error('Network');}));
+      await rejects(() => requestFreeBusyOnce(q,{...auth,expiresAt:0},fakeFetch));
+      await rejects(() => requestFreeBusyOnce(q,{...auth,scopes:[]},fakeFetch));
+      await rejects(() => authorizeCalendarQuery());
+      const receipt=buildCalendarReceipt({approvedAt:'approval-time',requestAt:'request-time',completedAt:'completion-time',query:q,intervals:[interval],outcome:'Busy intervals'});
+      check(receipt.source==='Google Calendar - primary calendar' && receipt.sent.timeMin===q.timeMin && receipt.returned[0].start===interval.start && !JSON.stringify(receipt).includes('test-only'), 'Receipt accuracy');
+      renderCalendarReceipt(receipt);
+      return 'PASS window, gating, request isolation, response failures, outcomes and receipt';
+    });
+    console.log(results);
+    await page.locator('#work-context').fill('Lead the launch?');
+    await page.locator('#approved-context').fill('Thursday appointment');
+    await page.locator('#private-context').fill('PRIVATE SENTINEL');
+    await page.locator('#approve-context').check();
+    await page.locator('#bridge-form button').click();
+    assert.equal(await page.locator('#bridge-used').innerText(),'Thursday appointment');
+    assert.ok(!(await page.locator('#bridge-output').innerText()).includes('PRIVATE SENTINEL'));
+    await page.locator('#approve-context').uncheck();
+    await page.locator('#bridge-form button').click();
+    assert.equal(await page.locator('#bridge-used').innerText(),'No personal context used.');
+    await page.reload();
+    await page.locator('#bridge-form button').click();
+    assert.equal(await page.locator('#bridge-output').isVisible(),false);
+    for (const width of [1280,390]) {
+      await page.setViewportSize({width,height:900});
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
+      await page.locator('#work-context').focus();
+      await page.keyboard.type('Keyboard question');
+      assert.ok((await page.locator('#work-context').inputValue()).includes('Keyboard question'));
+      await page.screenshot({path:`/tmp/context-bridge-${width}.png`, fullPage:true});
+    }
+    assert.deepEqual(errors,[]);assert.deepEqual(googleRequests,[]);
+    console.log('PASS simulation regression, disabled state, zero Google requests, desktop/phone and keyboard');
+  } finally { await browser.close(); }
+})().catch(e=>{console.error(e);process.exitCode=1;});
