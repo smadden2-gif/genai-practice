@@ -67,6 +67,8 @@
     .ledger p,.ledger li { white-space:pre-wrap; }
     .ledger ol { padding-left:1.5rem; }
     .ledger li + li { border-top:1px solid var(--line); padding-top:.75rem; margin-top:.75rem; }
+    .example-options { border:0; padding:0; margin:1rem 0; }
+    .example-options button { margin:.25rem .25rem .25rem 0; }
     .secondary { color:var(--teal-deep); background:white; }
     .secondary:hover { color:white; }
     .button:disabled { opacity:.55; cursor:default; transform:none; }
@@ -93,7 +95,12 @@
         <p class="hero-aside">One clear boundary: see what was used, what stayed out, and decide what crosses the bridge.</p>
       </aside>
     </div></section>
-    <section class="bridge-demo" id="bridge-demo" aria-labelledby="bridge-title"><div class="shell"><div class="bridge-heading"><div><p class="eyebrow">The Context Bridge prototype</p><h2 id="bridge-title">Bring one piece of your context to a work question.</h2></div><p class="section-intro">Approve what may cross. Keep private notes out. See a clear record of what this simulated result used and left behind. <a href="#handoff">Try the assistant handoff</a>.</p></div><div class="bridge-grid"><form class="bridge-form" id="bridge-form"><p class="bridge-step">SIMULATED - NOT AI</p><label for="work-context">What work opportunity or decision are you facing? <span>Required</span></label><textarea id="work-context" name="work" rows="3" required placeholder="Example: Should I take on this project?"></textarea><label for="approved-context">What personal context may the bridge consider?</label><textarea id="approved-context" name="approved" rows="3" placeholder="Example: I am unavailable on Thursday evenings."></textarea><label class="consent-row"><input type="checkbox" id="approve-context"><span>I approve using the personal context above in this demo result.</span></label><label for="private-context">What should stay private and out of this bridge?</label><textarea id="private-context" name="private" rows="2" placeholder="Optional - this will not be used in the result."></textarea><p class="privacy-note">This page runs in your browser. It does not send or save what you type. You decide what context is approved; the private field is never displayed or used in the result.</p><div class="ledger"><h3>Review this run</h3><p id="preview"></p></div><button class="button" type="submit">Confirm and run <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5"/></svg></button></form><div class="bridge-result" id="bridge-result" aria-live="polite" aria-atomic="true"><p class="eyebrow">Your result</p><h3>One decision, with boundaries.</h3><p class="bridge-placeholder">Add a work decision, choose what personal context to approve, then run the demo.</p><div class="bridge-output" id="bridge-output" hidden><p id="permission" role="status"></p><div class="bridge-summary"><span class="bridge-tag">SIMULATED - NOT AI</span><p id="bridge-recommendation"></p></div><div class="bridge-audit"><div><h4>Used in this result</h4><p id="bridge-used">None yet.</p></div><div><h4>Kept out of this result</h4><p id="bridge-not-used">None yet.</p></div></div><p class="bridge-disclaimer">This is a fixed template, not an AI analysis. No text leaves this page or gets saved.</p></div><div class="ledger"><h3>Run receipts</h3><ol id="runs"></ol></div></div></div></div></section>
+    <section class="bridge-demo" id="bridge-demo" aria-labelledby="bridge-title"><div class="shell"><div class="bridge-heading"><div><p class="eyebrow">The Context Bridge prototype</p><h2 id="bridge-title">Bring one piece of your context to a work question.</h2></div><p class="section-intro">Approve what may cross. Keep private notes out. See a clear record of what this simulated result used and left behind. <a href="#handoff">Try the assistant handoff</a>.</p></div><div class="bridge-grid"><form class="bridge-form" id="bridge-form"><p class="bridge-step">SIMULATED - NOT AI</p><fieldset class="example-options">
+        <legend>Fill the form with an example</legend>
+        <button class="button secondary" type="button" data-sample="workshop">Evening workshop</button>
+        <button class="button secondary" type="button" data-sample="travel">Client visit</button>
+        <button class="button secondary" type="button" data-sample="training">Training course</button>
+      </fieldset><label for="work-context">What work opportunity or decision are you facing? <span>Required</span></label><textarea id="work-context" name="work" rows="3" required placeholder="Example: Should I take on this project?"></textarea><label for="approved-context">What personal context may the bridge consider?</label><textarea id="approved-context" name="approved" rows="3" placeholder="Example: I am unavailable on Thursday evenings."></textarea><label class="consent-row"><input type="checkbox" id="approve-context"><span>I approve using the personal context above in this demo result.</span></label><label for="private-context">What should stay private and out of this bridge?</label><textarea id="private-context" name="private" rows="2" placeholder="Optional - this will not be used in the result."></textarea><p class="privacy-note">This page runs in your browser. It does not send or save what you type. You decide what context is approved; the private field is never displayed or used in the result.</p><div class="ledger"><h3>Review this run</h3><p id="preview"></p></div><button class="button" type="submit">Confirm and run <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5"/></svg></button></form><div class="bridge-result" id="bridge-result" aria-live="polite" aria-atomic="true"><p class="eyebrow">Your result</p><h3>One decision, with boundaries.</h3><p class="bridge-placeholder">Add a work decision, choose what personal context to approve, then run the demo.</p><div class="bridge-output" id="bridge-output" hidden><p id="permission" role="status"></p><div class="bridge-summary"><span class="bridge-tag">SIMULATED - NOT AI</span><p id="bridge-recommendation"></p></div><div class="bridge-audit"><div><h4>Used in this result</h4><p id="bridge-used">None yet.</p></div><div><h4>Kept out of this result</h4><p id="bridge-not-used">None yet.</p></div></div><p class="bridge-disclaimer">This is a fixed template, not an AI analysis. No text leaves this page or gets saved.</p></div><div class="ledger"><h3>Run receipts</h3><ol id="runs"></ol></div></div></div></div></section>
 
     <section id="handoff" aria-labelledby="handoff-title"><div class="shell">
       <p class="eyebrow">SIMULATED - NOT AI</p>
@@ -164,6 +171,37 @@
       entry.textContent = text;
       list.append(entry);
     }
+
+    const samples = {
+      workshop: {
+        work: 'Should I lead the Thursday evening workshop or help prepare the materials?',
+        personal: 'I’m unavailable on Thursdays after 5 pm.',
+        privateNote: 'I take my dad to dinner on Thursday evenings.'
+      },
+      travel: {
+        work: 'Should I visit the client on Tuesday or join by video?',
+        personal: 'I need to be home by 4 pm on Tuesday.',
+        privateNote: 'My sister is dropping off a birthday surprise.'
+      },
+      training: {
+        work: 'Should I take the live course or choose the self-paced version?',
+        personal: 'I have two hours free on Saturday mornings.',
+        privateNote: 'I’m exploring a career change.'
+      }
+    };
+
+    form.querySelectorAll('[data-sample]').forEach(button => {
+      button.addEventListener('click', () => {
+        const sample = samples[button.dataset.sample];
+        byId('work-context').value = sample.work;
+        byId('approved-context').value = sample.personal;
+        byId('private-context').value = sample.privateNote;
+        if (consent.checked && !byId('bridge-output').hidden) stale = true;
+        consent.checked = false;
+        updatePreview();
+        byId('work-context').focus();
+      });
+    });
 
     form.addEventListener('input', event => {
       if (event.target === consent && !byId('bridge-output').hidden) stale = true;
