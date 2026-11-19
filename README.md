@@ -4,9 +4,7 @@
 
 Your AI starts from zero in each tool, while the context it needs is scattered across work and personal systems. Context Bridge is a permission-first way to carry the right context to a task while keeping the boundary visible.
 
-**[Download the updated demo and this README together (ZIP)](https://github.com/smadden2-gif/genai-practice/archive/refs/heads/revision-nov19.zip)**
-
-Unzip the folder and open `index.html` in your browser. Select **Try the context bridge**, then **Evening workshop** to fill all three text boxes.
+**[Open Context Bridge on GitHub Pages](https://smadden2-gif.github.io/genai-practice/)**
 
 ## The October prototype
 
