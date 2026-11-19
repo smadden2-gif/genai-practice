@@ -6,6 +6,10 @@ Your AI starts from zero in each tool, while the context it needs is scattered a
 
 **[Open Context Bridge on GitHub Pages](https://smadden2-gif.github.io/genai-practice/)**
 
+## Demo Video
+
+[Watch the November walkthrough on Google Drive](https://drive.google.com/file/d/1llttV3kc-WFDBoBNq7vRrlwdBxrOjXrs/view). This 2 minute 52 second draft uses browser captures, fictional examples and synthetic narration.
+
 ## The October prototype
 
 The October prototype introduced the first simulated flow: enter a work question, add optional personal context, explicitly approve whether that context may be considered, and optionally write a separate note to keep private. The result shows what personal context was used and what stayed out. Approval is unchecked by default.
@@ -18,7 +22,7 @@ Note: The assignment suggested Replit, but I did not have access, so I built thi
 
 ## Run the November revision
 
-Check out `revision-nov19` and open `index.html` in a browser. The demo runs locally with no installation or build step.
+Open the repository’s [current prototype](index.html) locally, or use the GitHub Pages link above. To run locally, open `index.html` in a browser. The demo runs locally with no installation or build step.
 
 ## Try the two flows
 
@@ -33,6 +37,24 @@ Choosing another example clears approval and updates the preview. Earlier receip
 ### Share busy times between assistants
 
 In **Share busy times**, select **Ask for busy times**. The work assistant offers three fictional busy ranges. **Decline** closes the request. **Approve** shares exactly the previewed ranges with the personal assistant and adds one transfer receipt. Each new request needs its own decision.
+
+## Assignment evaluation
+
+The intended user is someone weighing a work opportunity against a personal commitment. The intended assistant would use a work question and a user-approved constraint to suggest a suitable next step. In this version the form generates a fixed answer, and the calendar handoff uses fictional data. The preview, filtering, approval controls and in-page receipts work in the browser.
+
+The November revision focused on three decisions: show the package before submission, account for every exclusion, and distinguish current permission from the history of earlier runs.
+
+| Case | Synthetic input or action | Success criterion | Observed in Chromium | Result | Implication |
+| --- | --- | --- | --- | --- | --- |
+| Typical 1 | Approve the Evening workshop constraint and run | Use the scheduling constraint and exclude the private reason | The answer mentioned the Thursday constraint. The private note was absent from the result. | Pass | A user can share availability without sharing the reason. |
+| Typical 2 | Ask for the work calendar’s busy times and approve | Deliver the three previewed ranges and create one receipt | The receiving function got only three times. The receipt matched the preview. | Pass | The calendar filter limits the data delivered. |
+| Challenge | Ask “Should I travel?” and approve “It depends.” | A helpful answer should identify what information is missing | The template said to check the next step against “It depends.” It gave no clarification. | Partial | Permission worked, but the output did little to help the decision. |
+| Invalid | Clear the required work question after a completed run, then submit | Block a new run and preserve history | The browser flagged the missing field. The receipt count stayed at one. | Pass | A missing question cannot generate a receipt. |
+| Risk | After an approved run, uncheck permission | Warn that the result reflects earlier permission and preserve its receipt | The stale-result marker appeared, current permission showed as off, and receipt text stayed unchanged. | Pass | A reviewer can distinguish an earlier disclosure from permission for the next run. |
+
+**Before and after.** In both versions, the question was “Lead the workshop?”, personal context was “Thursday appointment”, and the private note was “Synthetic private note”. Approval was off. October reported only “A separate private note was kept out of this result.” November listed both the unapproved personal context and the private note. The difference was visible with the same input.
+
+**What the evidence supports.** These checks show which fields reach a result and what the receipt records. They do not establish that people understand the preview or that the template improves a decision. The ambiguous travel example exposed that limitation. The next priorities are to observe someone predicting what will cross before clicking, then compare how helpful they find the answers with and without an approved constraint.
 
 ## November test results
 
