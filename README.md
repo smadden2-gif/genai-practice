@@ -48,6 +48,15 @@ Tested the page markup and interactions in Chromium. All eight checks passed.
 | B2 | The filter returned only time ranges. The receiving function got only those ranges. The console stayed empty. |
 | B3 | Approval started disabled. Declining displayed “I received nothing” without delivering data or adding a receipt. |
 | B4 | Two approvals required separate requests and produced two receipt entries. |
+| Conflict | With Thursday after 5 pm unavailable, the workshop result cited the approved phrase and recommended Friday at 2 pm over Thursday at 6 pm. |
+| Checked, no conflict | With a Tuesday 4 pm deadline, Tuesday at 2 pm and Wednesday at 10 am both cleared the start-time check. |
+| Cannot check | Learning preference and a three-option question both returned “cannot check this one”. Neither reported “no conflict”. |
+| Both conflict | With Monday unavailable, the result named Monday at 2 pm and Monday at 3 pm and chose neither. |
+| Approval contrast | The identical workshop question gave the original generic next step without approval and recommended Friday after approval. |
+| Uncertain alternative | With Thursday at 1 pm unavailable, the checker flagged that start and withheld a recommendation for a Thursday alternative with no time. |
+| Browser verification | In Chromium, all four presets started with approval off. Private notes stayed out of results and receipts. No requests, console messages or script errors were observed. |
+
+The contrast demonstrates this narrow rule-based check only, not evidence of real AI quality or user benefit.
 
 All three example buttons filled the three fields, cleared approval, and updated the preview. Switching examples preserved prior receipts. The private note stayed out of each new receipt.
 
