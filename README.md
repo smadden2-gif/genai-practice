@@ -7,9 +7,9 @@ Your AI starts from zero in each tool, while the context it needs is scattered a
 - [Open the live Context Bridge prototype](https://smadden2-gif.github.io/genai-practice/)
 - [View the public GitHub repository](https://github.com/smadden2-gif/genai-practice)
 
-## The first slice
+## The October prototype
 
-The page centers on one simulated flow: enter a work question, add optional personal context, explicitly approve whether that context may be considered, and optionally write a separate note to keep private. The result shows what personal context was used and what stayed out. Approval is unchecked by default.
+The October prototype introduced the first simulated flow: enter a work question, add optional personal context, explicitly approve whether that context may be considered, and optionally write a separate note to keep private. The result shows what personal context was used and what stayed out. Approval is unchecked by default.
 
 ## AI role and transparency
 
@@ -23,8 +23,17 @@ Check out `revision-nov19` and open `index.html` in a browser. The demo runs loc
 
 ## Try the two flows
 
-1. Enter a work question and optional personal context. Review the preview, then choose **Confirm and run**. Change permission to see how the next run differs. Earlier receipts stay visible until the page reloads.
-2. In **Share busy times**, select **Ask for busy times**. The work assistant offers three fictional busy ranges. **Decline** closes the request. **Approve** shares exactly the previewed ranges with the personal assistant and adds one transfer receipt. Each new request needs its own decision.
+### Compare two receipts
+
+1. Under **Fill the form with an example**, choose **Evening workshop**, **Client visit**, or **Training course**. Each button replaces all three text boxes with an editable work question, personal constraint, and private note.
+2. Try **Evening workshop** first. Leave approval unchecked, read the preview, and select **Confirm and run**. The receipt contains the workshop question. **Kept out** lists both the personal context and the private note.
+3. Check approval and read the preview again. It now includes “I’m unavailable on Thursdays after 5 pm.” Select **Confirm and run** and compare the two receipts. The second includes the scheduling constraint. The reason for it stays private.
+
+Choosing another example clears approval and updates the preview. Earlier receipts stay visible until you reload the page.
+
+### Share busy times between assistants
+
+In **Share busy times**, select **Ask for busy times**. The work assistant offers three fictional busy ranges. **Decline** closes the request. **Approve** shares exactly the previewed ranges with the personal assistant and adds one transfer receipt. Each new request needs its own decision.
 
 ## November test results
 
@@ -40,6 +49,8 @@ Tested the page markup and interactions in Chromium. All eight checks passed.
 | B2 | The filter returned only time ranges. The receiving function got only those ranges. The console stayed empty. |
 | B3 | Approval started disabled. Declining displayed “I received nothing” without delivering data or adding a receipt. |
 | B4 | Two approvals required separate requests and produced two receipt entries. |
+
+All three example buttons filled the three fields, cleared approval, and updated the preview. Switching examples preserved prior receipts. The private note stayed out of each new receipt.
 
 The panels stacked at 375 pixels and appeared side by side at 1200 pixels. The browser recorded zero network requests or script errors during the checks.
 
