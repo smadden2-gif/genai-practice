@@ -100,6 +100,7 @@
         <button class="button secondary" type="button" data-sample="workshop">Evening workshop</button>
         <button class="button secondary" type="button" data-sample="travel">Client visit</button>
         <button class="button secondary" type="button" data-sample="training">Training course</button>
+        <button class="button secondary" type="button" data-sample="preference">Learning preference</button>
       </fieldset><label for="work-context">What work opportunity or decision are you facing? <span>Required</span></label><textarea id="work-context" name="work" rows="3" required placeholder="Example: Should I take on this project?"></textarea><label for="approved-context">What personal context may the bridge consider?</label><textarea id="approved-context" name="approved" rows="3" placeholder="Example: I am unavailable on Thursday evenings."></textarea><label class="consent-row"><input type="checkbox" id="approve-context"><span>I approve using the personal context above in this demo result.</span></label><label for="private-context">What should stay private and out of this bridge?</label><textarea id="private-context" name="private" rows="2" placeholder="Optional - this will not be used in the result."></textarea><p class="privacy-note">This page runs in your browser. It does not send or save what you type. You decide what context is approved; the private field is never displayed or used in the result.</p><div class="ledger"><h3>Review this run</h3><p id="preview"></p></div><button class="button" type="submit">Confirm and run <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5"/></svg></button></form><div class="bridge-result" id="bridge-result" aria-live="polite" aria-atomic="true"><p class="eyebrow">Your result</p><h3>One decision, with boundaries.</h3><p class="bridge-placeholder">Add a work decision, choose what personal context to approve, then run the demo.</p><div class="bridge-output" id="bridge-output" hidden><p id="permission" role="status"></p><div class="bridge-summary"><span class="bridge-tag">SIMULATED - NOT AI</span><p id="bridge-recommendation"></p></div><div class="bridge-audit"><div><h4>Used in this result</h4><p id="bridge-used">None yet.</p></div><div><h4>Considered</h4><p id="bridge-considered"></p></div><div><h4>Kept out of this result</h4><p id="bridge-not-used">None yet.</p></div></div><p class="bridge-disclaimer">Demo checks simple day and time conflicts only. No text leaves this page or gets saved.</p></div><div class="ledger"><h3>Run receipts</h3><ol id="runs"></ol></div></div></div></div></section>
 
     <section id="handoff" aria-labelledby="handoff-title"><div class="shell">
@@ -229,18 +230,23 @@
 
     const samples = {
       workshop: {
-        work: 'Should I lead the Thursday evening workshop or help prepare the materials?',
-        personal: 'I’m unavailable on Thursdays after 5 pm.',
+        work: 'Thursday at 6 pm or Friday at 2 pm?',
+        personal: 'Unavailable on Thursday after 5 pm.',
         privateNote: 'I take my dad to dinner on Thursday evenings.'
       },
       travel: {
-        work: 'Should I visit the client on Tuesday or join by video?',
-        personal: 'I need to be home by 4 pm on Tuesday.',
+        work: 'Tuesday at 2 pm or Wednesday at 10 am?',
+        personal: 'Home by 4 pm on Tuesday.',
         privateNote: 'My sister is dropping off a birthday surprise.'
       },
+      preference: {
+        work: 'Take a live class or learn independently?',
+        personal: 'I learn best with diagrams.',
+        privateNote: 'I keep my study journal private.'
+      },
       training: {
-        work: 'Should I take the live course or choose the self-paced version?',
-        personal: 'I have two hours free on Saturday mornings.',
+        work: 'Saturday at 9 am or Saturday at 10 am?',
+        personal: 'Free on Saturday.',
         privateNote: 'I’m exploring a career change.'
       }
     };
