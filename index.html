@@ -95,12 +95,12 @@
         <p class="hero-aside">One clear boundary: see what was used, what stayed out, and decide what crosses the bridge.</p>
       </aside>
     </div></section>
-    <section class="bridge-demo" id="bridge-demo" aria-labelledby="bridge-title"><div class="shell"><div class="bridge-heading"><div><p class="eyebrow">The Context Bridge prototype</p><h2 id="bridge-title">Bring one piece of your context to a work question.</h2></div><p class="section-intro">Approve what may cross. Keep private notes out. See a clear record of what this simulated result used and left behind. <a href="#handoff">Try the assistant handoff</a>.</p></div><div class="bridge-grid"><form class="bridge-form" id="bridge-form"><p class="bridge-step">SIMULATED - NOT AI</p><fieldset class="example-options">
+    <section class="bridge-demo" id="bridge-demo" aria-labelledby="bridge-title"><div class="shell"><div class="bridge-heading"><div><p class="eyebrow">The Context Bridge prototype</p><h2 id="bridge-title">Bring one piece of your context to a work question.</h2></div><p class="section-intro">Approve what may cross. Keep private notes out. See a clear record of what this simulated result used and left behind. <a href="#handoff">Try the assistant handoff</a>.</p></div><div class="bridge-grid"><form class="bridge-form" id="bridge-form"><p class="bridge-step">SIMULATED - NOT AI</p><p>Demo checks simple day and time conflicts only. Enter two slots like “Thursday at 6 pm or Friday at 2 pm?” Use a full day name for each. For personal context, try “unavailable on Thursday”, “unavailable on Thursday after 5 pm”, “home by 4 pm on Tuesday”, or “free on Friday at 2 pm”. The check compares start times only. “Free on” confirms that slot and leaves other slots unknown.</p><fieldset class="example-options">
         <legend>Fill the form with an example</legend>
         <button class="button secondary" type="button" data-sample="workshop">Evening workshop</button>
         <button class="button secondary" type="button" data-sample="travel">Client visit</button>
         <button class="button secondary" type="button" data-sample="training">Training course</button>
-      </fieldset><label for="work-context">What work opportunity or decision are you facing? <span>Required</span></label><textarea id="work-context" name="work" rows="3" required placeholder="Example: Should I take on this project?"></textarea><label for="approved-context">What personal context may the bridge consider?</label><textarea id="approved-context" name="approved" rows="3" placeholder="Example: I am unavailable on Thursday evenings."></textarea><label class="consent-row"><input type="checkbox" id="approve-context"><span>I approve using the personal context above in this demo result.</span></label><label for="private-context">What should stay private and out of this bridge?</label><textarea id="private-context" name="private" rows="2" placeholder="Optional - this will not be used in the result."></textarea><p class="privacy-note">This page runs in your browser. It does not send or save what you type. You decide what context is approved; the private field is never displayed or used in the result.</p><div class="ledger"><h3>Review this run</h3><p id="preview"></p></div><button class="button" type="submit">Confirm and run <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5"/></svg></button></form><div class="bridge-result" id="bridge-result" aria-live="polite" aria-atomic="true"><p class="eyebrow">Your result</p><h3>One decision, with boundaries.</h3><p class="bridge-placeholder">Add a work decision, choose what personal context to approve, then run the demo.</p><div class="bridge-output" id="bridge-output" hidden><p id="permission" role="status"></p><div class="bridge-summary"><span class="bridge-tag">SIMULATED - NOT AI</span><p id="bridge-recommendation"></p></div><div class="bridge-audit"><div><h4>Used in this result</h4><p id="bridge-used">None yet.</p></div><div><h4>Kept out of this result</h4><p id="bridge-not-used">None yet.</p></div></div><p class="bridge-disclaimer">This is a fixed template, not an AI analysis. No text leaves this page or gets saved.</p></div><div class="ledger"><h3>Run receipts</h3><ol id="runs"></ol></div></div></div></div></section>
+      </fieldset><label for="work-context">What work opportunity or decision are you facing? <span>Required</span></label><textarea id="work-context" name="work" rows="3" required placeholder="Example: Should I take on this project?"></textarea><label for="approved-context">What personal context may the bridge consider?</label><textarea id="approved-context" name="approved" rows="3" placeholder="Example: I am unavailable on Thursday evenings."></textarea><label class="consent-row"><input type="checkbox" id="approve-context"><span>I approve using the personal context above in this demo result.</span></label><label for="private-context">What should stay private and out of this bridge?</label><textarea id="private-context" name="private" rows="2" placeholder="Optional - this will not be used in the result."></textarea><p class="privacy-note">This page runs in your browser. It does not send or save what you type. You decide what context is approved; the private field is never displayed or used in the result.</p><div class="ledger"><h3>Review this run</h3><p id="preview"></p></div><button class="button" type="submit">Confirm and run <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5"/></svg></button></form><div class="bridge-result" id="bridge-result" aria-live="polite" aria-atomic="true"><p class="eyebrow">Your result</p><h3>One decision, with boundaries.</h3><p class="bridge-placeholder">Add a work decision, choose what personal context to approve, then run the demo.</p><div class="bridge-output" id="bridge-output" hidden><p id="permission" role="status"></p><div class="bridge-summary"><span class="bridge-tag">SIMULATED - NOT AI</span><p id="bridge-recommendation"></p></div><div class="bridge-audit"><div><h4>Used in this result</h4><p id="bridge-used">None yet.</p></div><div><h4>Considered</h4><p id="bridge-considered"></p></div><div><h4>Kept out of this result</h4><p id="bridge-not-used">None yet.</p></div></div><p class="bridge-disclaimer">Demo checks simple day and time conflicts only. No text leaves this page or gets saved.</p></div><div class="ledger"><h3>Run receipts</h3><ol id="runs"></ol></div></div></div></div></section>
 
     <section id="handoff" aria-labelledby="handoff-title"><div class="shell">
       <p class="eyebrow">SIMULATED - NOT AI</p>
@@ -172,6 +172,61 @@
       list.append(entry);
     }
 
+    // Question: DAY [at TIME] or DAY [at TIME], optionally ending in '?'.
+    // Context: unavailable on DAY [at/after TIME], home by TIME on DAY,
+    // or free on DAY [at TIME]. TIME is a 12-hour clock value with am/pm.
+    const dayPattern = '(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)';
+    const timePattern = '((?:1[0-2]|[1-9])(?::[0-5][0-9])? *[ap]m)';
+    const slotPattern = new RegExp('^' + dayPattern + '(?: at ' + timePattern + ')?$', 'i');
+    const unavailable = new RegExp('^unavailable on ' + dayPattern + '(?: (at|after) ' + timePattern + ')?$', 'i');
+    const homeBy = new RegExp('^home by ' + timePattern + ' on ' + dayPattern + '$', 'i');
+    const freeOn = new RegExp('^free on ' + dayPattern + '(?: at ' + timePattern + ')?$', 'i');
+
+    function minutes(time) {
+      if (!time) return null;
+      const [, hour, minute, period] = time.match(/^(\d+)(?::(\d+))? *([ap])m$/i);
+      return (Number(hour) % 12 + (period.toLowerCase() === 'p' ? 12 : 0)) * 60 + Number(minute || 0);
+    }
+
+    function readRule(context) {
+      const phrase = context.toLowerCase().replace(/\.$/, '');
+      const blocked = unavailable.exec(phrase);
+      if (blocked) return {day: blocked[1], kind: blocked[2] || 'all', time: minutes(blocked[3])};
+      const deadline = homeBy.exec(phrase);
+      if (deadline) return {day: deadline[2], kind: 'after', time: minutes(deadline[1])};
+      const free = freeOn.exec(phrase);
+      if (free) return {day: free[1], kind: 'free', time: minutes(free[2])};
+      return null;
+    }
+
+    function checkSlot(slot, rule) {
+      const sameDay = slot[1].toLowerCase() === rule.day;
+      const start = minutes(slot[2]);
+      if (rule.kind === 'free') {
+        return sameDay && (rule.time === null || start === rule.time) ? 'clear' : 'unknown';
+      }
+      if (!sameDay) return 'clear';
+      if (rule.kind === 'all') return 'conflict';
+      if (start === null) return 'unknown';
+      const blocked = rule.kind === 'after' ? start > rule.time : start === rule.time;
+      return blocked ? 'conflict' : 'clear';
+    }
+
+    function checkOptions(question, context) {
+      const rule = readRule(context);
+      const slots = question.replace(/\?$/, '').split(/\s+or\s+/i).map(option => slotPattern.exec(option.trim()));
+      const unchecked = {outcome: 'Cannot check', answer: 'I cannot check this one.', matched: Boolean(rule)};
+      if (!rule || slots.length !== 2 || slots.some(slot => !slot)) return unchecked;
+      const states = slots.map(slot => checkSlot(slot, rule));
+      if (states.includes('unknown')) return unchecked;
+      const conflicts = slots.filter((slot, i) => states[i] === 'conflict');
+      if (!conflicts.length) return {outcome: 'Checked, no conflict', answer: 'Checked, no conflict with the approved phrase for either start.', matched: true};
+      const names = conflicts.map(slot => slot[0]).join(' and ');
+      const other = slots.find((slot, i) => states[i] === 'clear');
+      const choice = other ? ' Choose ' + other[0] + '.' : ' Choose neither.';
+      return {outcome: 'Conflict', answer: names + ' conflicts with “' + context + '”.' + choice, matched: true};
+    }
+
     const samples = {
       workshop: {
         work: 'Should I lead the Thursday evening workshop or help prepare the materials?',
@@ -220,9 +275,12 @@
       const excluded = [];
       if (run.personal && !run.allowed) excluded.push('Personal context: not approved, kept out.');
       if (byId('private-context').value.trim()) excluded.push('Private note: kept out.');
-      byId('bridge-recommendation').textContent = 'For this work decision: ' + run.work +
-        (run.allowed ? ' Check your next step against this commitment: ' + run.allowed :
-          ' Choose one reversible next step. Personal context: ' + run.reason + '.');
+      const check = run.allowed ? checkOptions(run.work, run.allowed) : null;
+      byId('bridge-recommendation').textContent = check ? check.answer :
+        'For this work decision: ' + run.work + ' Choose one reversible next step. Personal context: ' + run.reason + '.';
+      byId('bridge-considered').textContent = check && check.matched
+        ? check.outcome + ' · “' + run.allowed + '”'
+        : (check ? check.outcome + '. ' : '') + 'No rule matched.';
       byId('bridge-used').textContent = run.allowed || 'Personal context: ' + run.reason + '.';
       byId('bridge-not-used').textContent = excluded.join(' ') || 'No items kept out.';
       appendReceipt(byId('runs'), run.summary);
