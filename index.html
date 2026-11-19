@@ -219,13 +219,14 @@
       const unchecked = {outcome: 'Cannot check', answer: 'I cannot check this one.', matched: Boolean(rule)};
       if (!rule || slots.length !== 2 || slots.some(slot => !slot)) return unchecked;
       const states = slots.map(slot => checkSlot(slot, rule));
-      if (states.includes('unknown')) return unchecked;
       const conflicts = slots.filter((slot, i) => states[i] === 'conflict');
+      if (!conflicts.length && states.includes('unknown')) return unchecked;
       if (!conflicts.length) return {outcome: 'Checked, no conflict', answer: 'Checked, no conflict with the approved phrase for either start.', matched: true};
       const names = conflicts.map(slot => slot[0]).join(' and ');
       const other = slots.find((slot, i) => states[i] === 'clear');
-      const choice = other ? ' Choose ' + other[0] + '.' : ' Choose neither.';
-      return {outcome: 'Conflict', answer: names + ' conflicts with “' + context + '”.' + choice, matched: true};
+      const choice = other ? ' Choose ' + other[0] + '.' : states.includes('unknown')
+        ? ' The other slot needs a time before I can recommend it.' : ' Choose neither.';
+      return {outcome: 'Conflict', answer: 'Conflict: ' + names + '. Approved phrase: “' + context + '”.' + choice, matched: true};
     }
 
     const samples = {
