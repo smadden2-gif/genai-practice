@@ -87,6 +87,22 @@
     </div></section>
     <section class="bridge-demo" id="bridge-demo" aria-labelledby="bridge-title"><div class="shell"><div class="bridge-heading"><div><p class="eyebrow">The Context Bridge prototype</p><h2 id="bridge-title">Bring one piece of your context to a work question.</h2></div><p class="section-intro">Approve what may cross. Keep private notes out. See a clear record of what this simulated result used and left behind.</p></div><div class="bridge-grid"><form class="bridge-form" id="bridge-form"><p class="bridge-step">A small, simulated context bridge</p><label for="work-context">What work opportunity or decision are you facing? <span>Required</span></label><textarea id="work-context" name="work" rows="3" required placeholder="Example: Should I take on this project?"></textarea><label for="approved-context">What personal context may the bridge consider?</label><textarea id="approved-context" name="approved" rows="3" placeholder="Example: I am unavailable on Thursday evenings."></textarea><label class="consent-row"><input type="checkbox" id="approve-context"><span>I approve using the personal context above in this demo result.</span></label><label for="private-context">What should stay private and out of this bridge?</label><textarea id="private-context" name="private" rows="2" placeholder="Optional - this will not be used in the result."></textarea><p class="privacy-note">This page runs in your browser. It does not send or save what you type. You decide what context is approved; the private field is never displayed or used in the result.</p><div class="ledger"><h3>Review this run</h3><p id="preview"></p></div><button class="button" type="submit">Confirm and run <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5"/></svg></button></form><div class="bridge-result" id="bridge-result" aria-live="polite" aria-atomic="true"><p class="eyebrow">Your result</p><h3>One decision, with boundaries.</h3><p class="bridge-placeholder">Add a work decision, choose what personal context to approve, then run the demo.</p><div class="bridge-output" id="bridge-output" hidden><p id="permission" role="status"></p><div class="bridge-summary"><span class="bridge-tag">SIMULATED - NOT AI</span><p id="bridge-recommendation"></p></div><div class="bridge-audit"><div><h4>Used in this result</h4><p id="bridge-used">None yet.</p></div><div><h4>Kept out of this result</h4><p id="bridge-not-used">None yet.</p></div></div><p class="bridge-disclaimer">This is a fixed template, not an AI analysis. No text leaves this page or gets saved.</p></div><div class="ledger"><h3>Run receipts</h3><ol id="runs"></ol></div></div></div></div></section>
 
+    <section id="handoff" aria-labelledby="handoff-title"><div class="shell">
+      <p class="eyebrow">SIMULATED - NOT AI</p>
+      <h2 id="handoff-title">Share busy times.</h2>
+      <div class="assistants">
+        <div><h3>Personal assistant</h3><p>Am I free after 3?</p>
+          <button class="button" id="request">Ask for busy times</button>
+          <p id="answer" role="status">No times received.</p></div>
+        <div><h3>Work assistant</h3><p>My fictional calendar has three meetings. I can offer their busy times.</p></div>
+      </div>
+      <div class="ledger"><h3>Approval preview</h3><p id="package" role="status">No request yet.</p>
+        <button class="button" id="approve" disabled>Approve</button>
+        <button class="button secondary" id="decline" disabled>Decline</button></div>
+      <div class="ledger"><h3>Transfer receipts</h3><p>Approved transfers for this visit.</p>
+        <p id="empty-history">No transfers yet.</p><ol id="transfers"></ol></div>
+    </div></section>
+
     <section class="problem" id="problem" aria-labelledby="problem-title"><div class="shell problem-grid">
       <div data-reveal><p class="eyebrow">The problem</p><h2 id="problem-title">Your context is stuck inside each tool.</h2><p class="section-intro">Your AI may know one project but not the commitments that shape it. You repeat yourself, move context by hand, or leave useful details behind. Sharing more is not the answer if you cannot see or control what crosses over.</p></div>
       <div class="problem-chart" data-reveal aria-label="Three Context Bridge principles: fragmented context, permission before use, and a visible audit afterward.">
@@ -169,6 +185,49 @@
       stale = false;
       updatePreview();
     });
+
+    function busyTimes(meetings) {
+      return meetings.map(meeting => meeting.time);
+    }
+
+    function requestWorkTimes() {
+      return busyTimes([
+        {time: '9–10 am', title: 'Map review', note: 'Bring the draft'},
+        {time: '1–2 pm', title: 'Garden planning', note: 'Check the budget'},
+        {time: '3–4 pm', title: 'Sketch review', note: 'Discuss early ideas'}
+      ]);
+    }
+
+    function personalAnswer(times) {
+      return 'You have a busy block from 3–4 pm. Your busy times today: ' + times.join(', ') + '.';
+    }
+
+    let pending = null;
+    function setPending(times) {
+      pending = times;
+      byId('approve').disabled = byId('decline').disabled = !times;
+      byId('request').disabled = Boolean(times);
+    }
+
+    byId('request').onclick = () => {
+      setPending(requestWorkTimes());
+      byId('package').textContent = 'Busy times: ' + pending.join(', ');
+      byId('answer').textContent = 'Waiting for permission. No times received for this request.';
+    };
+    byId('approve').onclick = () => {
+      if (!pending) return;
+      byId('answer').textContent = personalAnswer(pending);
+      appendReceipt(byId('transfers'), 'Work to personal · Busy times: ' + pending.join(', '));
+      byId('empty-history').hidden = true;
+      byId('package').textContent = 'Transfer approved and recorded.';
+      setPending(null);
+    };
+    byId('decline').onclick = () => {
+      if (!pending) return;
+      byId('answer').textContent = 'Request declined. I received nothing.';
+      byId('package').textContent = 'Declined. No times shared.';
+      setPending(null);
+    };
 
     document.getElementById('year').textContent = new Date().getFullYear();
     if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
