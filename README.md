@@ -17,61 +17,40 @@ The prototype does not call an AI model. Its response is a fixed browser-side te
 
 Note: The assignment suggested Replit, but I did not have access, so I built this with AI-assisted coding (Instinct's agent) and deployed it on GitHub Pages instead.
 
-## Quick tests
+## Run the November revision
 
-These three cases were run against the live prototype after the UI redesign.
+Check out `revision-nov19` and open `index.html` in a browser. The demo runs locally with no installation or build step.
 
-### Typical: approved context
+## Try the two flows
 
-**Input.** Work: "I could lead a launch while keeping weekly family commitments."
-Approved context: "I have a standing appointment on Thursday evenings."
-Private note: "Family health details I will not share here."
-Approval was checked.
+1. Enter a work question and optional personal context. Review the preview, then choose **Confirm and run**. Change permission to see how the next run differs. Earlier receipts stay visible until the page reloads.
+2. In **Share busy times**, select **Ask for busy times**. The work assistant offers three fictional busy ranges. **Decline** closes the request. **Approve** shares exactly the previewed ranges with the personal assistant and adds one transfer receipt. Each new request needs its own decision.
 
-**Expected.** The work question and approved context appear in the response.
-Used lists the approved context. Kept out excludes the private note
-without revealing its text.
+## November test results
 
-**Actual. Pass.** The response included the work question and approved
-context. Used showed the Thursday commitment. Kept out said the note
-stayed out without showing its text.
+Tested the page markup and interactions in Chromium. All eight checks passed.
 
-### Challenge: approval left unchecked
+| Check | Observed result |
+| --- | --- |
+| A1 | With both optional fields filled and approval off, Kept out listed both exclusions. |
+| A2 | Approving an empty personal field produced “no context entered”. |
+| A3 | Unchecking approval marked the result “Permission changed - run again”, showed the current permission and preserved the receipt history. |
+| A4 | The confirmed work question and approved personal context matched the receipt text exactly. |
+| B1 | All three fictional meetings had a time range, title and private note. |
+| B2 | The filter returned only time ranges. The receiving function got only those ranges. The console stayed empty. |
+| B3 | Approval started disabled. Declining displayed “I received nothing” without delivering data or adding a receipt. |
+| B4 | Two approvals required separate requests and produced two receipt entries. |
 
-**Input.** Work: "Should I accept a role with frequent travel?"
-Personal context: "I may need to care for my parent."
-Private note: "Do not use this." Approval was left unchecked.
+The panels stacked at 375 pixels and appeared side by side at 1200 pixels. The browser recorded zero network requests or script errors during the checks.
 
-**Expected.** No personal context is used. Used says none was used.
-The private note stays out.
+## Response to peer feedback
 
-**Actual. Pass.** The no-context response included the work question.
-Used said no personal context was used. Kept out described the private
-note without exposing it.
+TODO
 
-### Empty work question
+## Risk response
 
-**Input.** Reload the page to start fresh, leave required work input
-empty, and submit.
+TODO
 
-**Expected.** Browser validation blocks submission and the result stays
-hidden.
+## AI-use disclosure
 
-**Actual. Pass.** The browser displayed "Please fill out this field."
-The result remained hidden.
-
-## Known limitations
-
-- The response is a fixed template. It does not understand the work question or reason over context. Next: test with people, then evaluate a model using synthetic examples and a clear boundary for approved input.
-- The demo does not save decisions or remember permission between visits. Next: define user controls and deletion before considering storage.
-- It does not connect to other tools or move context between them. Next: test the permission model before adding an integration, and show exactly what data an integration would send.
-
-## Run locally
-
-Clone the repository and open `index.html` in a browser. No build step or server is required. The page uses a system font stack and no external JavaScript.
-
-```bash
-git clone https://github.com/smadden2-gif/genai-practice.git
-cd genai-practice
-open index.html
-```
+TODO
