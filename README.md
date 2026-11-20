@@ -8,7 +8,7 @@ Your AI starts from zero in each tool, while the context it needs is scattered a
 
 ## Demo Video
 
-[Watch the November walkthrough on Google Drive](https://drive.google.com/file/d/1llttV3kc-WFDBoBNq7vRrlwdBxrOjXrs/view). This 2 minute 52 second draft uses browser captures, fictional examples and synthetic narration.
+[Watch the November walkthrough on Google Drive](https://drive.google.com/file/d/1llttV3kc-WFDBoBNq7vRrlwdBxrOjXrs/view). This 2 minute 11 second walkthrough follows one fictional workshop decision through two runs. It shows how approval changes the preview, result and receipt. Narration uses the Kokoro synthetic voice model.
 
 ## The October prototype
 
