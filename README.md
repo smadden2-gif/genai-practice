@@ -18,7 +18,7 @@ The October prototype introduced the first simulated flow: enter a work question
 
 The prototype does not call an AI model. Its response is a fixed browser-side template that includes the work question and, only if the approval box is checked, the personal context. The separate private-note field is never rendered into the result. There is no backend, API key, storage, or network transfer of entered text. This tests the permission and audit interaction, not the quality of an AI-generated answer or a real cross-tool integration.
 
-Note: The assignment suggested Replit, but I did not have access, so I built this with AI-assisted coding (Instinct's agent) and deployed it on GitHub Pages instead.
+Note: The assignment suggested Replit, but I did not have access, so I built this with AI-assisted coding (Instinct's agent / Codex) and deployed it on GitHub Pages instead.
 
 ## Run the November revision
 
