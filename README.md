@@ -8,7 +8,7 @@ Your AI starts from zero in each tool, while the context it needs is scattered a
 
 ## Demo Video
 
-[Watch the November walkthrough on Google Drive](https://drive.google.com/file/d/1llttV3kc-WFDBoBNq7vRrlwdBxrOjXrs/view). This 2 minute 11 second walkthrough follows one fictional workshop decision through two runs. It shows how approval changes the preview, result and receipt. Narration uses the Kokoro synthetic voice model.
+[Watch the November walkthrough on Google Drive](https://drive.google.com/file/d/1llttV3kc-WFDBoBNq7vRrlwdBxrOjXrs/view). This 2:25 animated demo shows which details cross the permission boundary in a workshop decision and a calendar handoff. It includes captures from the prototype and selectable English captions. Synthetic narration uses Piper VCTK voice p245 (Irish English, Dublin), based on the [CSTR VCTK Corpus](https://doi.org/10.7488/ds/2645) by Yamagishi, Veaux and MacDonald ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)).
 
 ## The October prototype
 
