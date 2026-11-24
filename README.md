@@ -85,4 +85,13 @@ TODO
 
 ## AI-use disclosure
 
-TODO
+I used Codex and Instinct to make changes to the prototype code. I also used AI to help make the demo video and experimented with animation and synthetic voice models. The earlier cut followed the form from field to field. I wanted viewers to see why the sharing decision mattered, so I asked for a simpler story about the Thursday workshop and chose an Irish male voice for the final cut.
+
+Two excerpts from my prompts show how I used the tools:
+
+- “Never edit or delete the receipt history of what was actually sent” guided the code change that marks an earlier result when permission changes and keeps its receipt intact.
+- “It doesn't necessarily all have to be the walkthrough of the demo” guided the video edit. The final cut uses animated cards to show availability crossing the boundary while the private dinner plans stay behind.
+
+The browser tests checked the preview, exclusions and receipt history with fictional inputs. The assistants in the product use fixed responses. These tests show what the demo shares, but they do not establish how a real assistant would handle sensitive information.
+
+For a final product, I need to do more research on context sharing and the Agent2Agent (A2A) protocol. One question I want to test is whether a receiving assistant can answer “Am I free after three?” using only busy times, without private meeting titles or notes appearing in messages or logs. The current demo simulates that handoff locally.
