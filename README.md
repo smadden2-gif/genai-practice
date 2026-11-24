@@ -77,11 +77,19 @@ The panels stacked at 375 pixels and appeared side by side at 1200 pixels. The b
 
 ## Response to peer feedback
 
-TODO
+One reviewer recognized the hassle of repeating context across AI tools and asked where AI fit. Other reviewers said the simulation label was clear. They found the unchecked default and the **Used / Kept out** split helpful, so I kept both. Their tests also showed where a user could still be unsure about a particular run.
+
+| Feedback | Decision | What changed and why |
+| --- | --- | --- |
+| The intended AI role was hard to find. | Clarified; live integration deferred | The calendar example gives the assistant a concrete job: answer “Am I free after three?” using busy times. The answer is simulated so the permission flow can be tested before connecting real tools. |
+| A reviewer wanted to see exactly what would be included before submitting. | Acted on | **Review this run** shows the work question and any approved context while the user can still edit them. |
+| Checking approval with an empty field produced “not approved.” | Acted on | The result now says “no context entered.” That tells the user why nothing personal was used. |
+| Unchecking approval left the earlier result looking current. | Adapted | Of the two suggested fixes, I used the warning “Permission changed - run again.” The page shows the current permission while the receipt preserves what the earlier run actually used. |
+| With approval off and both optional fields filled, only the private note appeared under **Kept out**. | Acted on | The audit now names both exclusions without repeating their contents. The before-and-after test above reproduced the original omission and verified the fix. |
 
 ## Risk response
 
-TODO
+Someone asking a work assistant about an evening workshop may want to share when they are available while keeping a family commitment private. Approval starts off, the preview shows exactly what the next run will use, and the private note stays out even when availability is approved. In the revocation test, turning approval off marked the old answer and preserved its receipt. That distinction matters for privacy: changing permission can protect a future run, but it cannot take back a detail already shared. A user could still type a sensitive reason into the shareable field and approve it. The preview gives them a chance to catch that mistake; the prototype cannot tell which details they meant to keep private.
 
 ## AI-use disclosure
 
